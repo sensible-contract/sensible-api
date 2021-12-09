@@ -1,0 +1,5 @@
+{
+  "url": "https://api.sensiblequery.com/swagger/doc.json",
+  "dir": "./src/sensiblequery",
+  "prefix": "/api"
+}
