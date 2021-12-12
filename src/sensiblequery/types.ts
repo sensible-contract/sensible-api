@@ -4,6 +4,29 @@
  * @version 5
  */
 
+export interface GetAddressAddressContractHistoryQueryParams {
+  /**
+   *
+   * 起始游标
+   */
+  cursor: number;
+  /**
+   *
+   * End Block Height, (0 to get mempool data)
+   */
+  end: number;
+  /**
+   *
+   * 返回记录数量
+   */
+  size: number;
+  /**
+   *
+   * Start Block Height
+   */
+  start: number;
+}
+
 export interface GetAddressAddressHistoryQueryParams {
   /**
    *
@@ -12,9 +35,19 @@ export interface GetAddressAddressHistoryQueryParams {
   cursor: number;
   /**
    *
+   * End Block Height, (0 to get mempool data)
+   */
+  end: number;
+  /**
+   *
    * 返回记录数量
    */
   size: number;
+  /**
+   *
+   * Start Block Height
+   */
+  start: number;
 }
 
 export interface GetAddressAddressUtxoDataQueryParams {
@@ -77,9 +110,19 @@ export interface GetContractHistoryCodehashGenesisAddressQueryParams {
   cursor: number;
   /**
    *
+   * End Block Height, (0 to get mempool data)
+   */
+  end: number;
+  /**
+   *
    * 返回记录数量
    */
   size: number;
+  /**
+   *
+   * Start Block Height
+   */
+  start: number;
 }
 
 export interface GetContractSwapAggregateAmountCodehashGenesisQueryParams {
@@ -149,9 +192,19 @@ export interface GetFtHistoryCodehashGenesisAddressQueryParams {
   cursor: number;
   /**
    *
+   * End Block Height, (0 to get mempool data)
+   */
+  end: number;
+  /**
+   *
    * 返回记录数量
    */
   size: number;
+  /**
+   *
+   * Start Block Height
+   */
+  start: number;
 }
 
 export interface GetFtOwnersCodehashGenesisQueryParams {
@@ -271,6 +324,14 @@ export interface GetHeightHeightTxTxidOutsQueryParams {
   size: number;
 }
 
+export interface GetNftAuctionUtxoDetailCodehashNftidQueryParams {
+  /**
+   *
+   * 仅返回ready状态的记录
+   */
+  ready: boolean;
+}
+
 export interface GetNftDetailCodehashGenesisAddressQueryParams {
   /**
    *
@@ -292,9 +353,19 @@ export interface GetNftHistoryCodehashGenesisAddressQueryParams {
   cursor: number;
   /**
    *
+   * End Block Height, (0 to get mempool data)
+   */
+  end: number;
+  /**
+   *
    * 返回记录数量
    */
   size: number;
+  /**
+   *
+   * Start Block Height
+   */
+  start: number;
 }
 
 export interface GetNftOwnersCodehashGenesisQueryParams {
@@ -962,6 +1033,99 @@ export interface ModelMempoolInfoResp {
    * Mempool内包含的Tx数量
    */
   ntx?: number;
+}
+
+export interface ModelNFTAuctionResp {
+  /**
+   *
+   * 当前拍卖NFT的出价价格(satoshi)
+   */
+  bidBsvPrice?: number;
+  /**
+   *
+   * 当前拍卖出价的时间戳
+   */
+  bidTimestamp?: number;
+  /**
+   *
+   * 当前拍卖出价人的地址
+   */
+  bidderAddress?: string;
+  /**
+   *
+   * 当前拍卖NFT合约hash160(CodePart)
+   */
+  codehash?: string;
+  /**
+   *
+   * 当前拍卖手续费的地址
+   */
+  feeAddress?: string;
+  /**
+   *
+   * 当前拍卖手续费
+   */
+  feeAmount?: number;
+  /**
+   *
+   * 当前拍卖NFT的genesis
+   */
+  genesis?: string;
+  /**
+   *
+   * 当前交易被打包的区块高度
+   */
+  height?: number;
+  /**
+   *
+   * 输出被花费的txid所在区块内序号
+   */
+  idx?: number;
+  /**
+   *
+   * 当前拍卖NFT是否已准备好(转出到拍卖合约)
+   */
+  isReady?: boolean;
+  /**
+   *
+   * 当前拍卖NFT的codehash
+   */
+  nftCodehash?: string;
+  /**
+   *
+   * 当前拍卖NFT的nftId
+   */
+  nftID?: string;
+  /**
+   *
+   * 拍卖合约输出的satoshi
+   */
+  satoshi?: number;
+  /**
+   *
+   * 当前拍卖发起人的地址
+   */
+  senderAddress?: string;
+  /**
+   *
+   * 当前拍卖NFT合约的sensibleId，即genesisTx的outpoint，Hex编码
+   */
+  sensibleId?: string;
+  /**
+   *
+   * 当前拍卖NFT的起拍价格(satoshi)
+   */
+  startBsvPrice?: number;
+  /**
+   *
+   * 拍卖合约txid
+   */
+  txid?: string;
+  /**
+   *
+   * 拍卖合约输出序号
+   */
+  vout?: number;
 }
 
 export interface ModelNFTInfoResp {

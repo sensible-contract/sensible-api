@@ -8,6 +8,7 @@ import { AxiosRequestConfig } from "axios";
 import { SwaggerResponse } from "./config";
 import { Http } from "./httpRequest";
 import {
+  GetAddressAddressContractHistoryQueryParams,
   GetAddressAddressHistoryQueryParams,
   GetAddressAddressUtxoQueryParams,
   GetAddressAddressUtxoDataQueryParams,
@@ -27,6 +28,7 @@ import {
   GetHeightHeightBlockTxsQueryParams,
   GetHeightHeightTxTxidInsQueryParams,
   GetHeightHeightTxTxidOutsQueryParams,
+  GetNftAuctionUtxoDetailCodehashNftidQueryParams,
   GetNftDetailCodehashGenesisAddressQueryParams,
   GetNftHistoryCodehashGenesisAddressQueryParams,
   GetNftOwnersCodehashGenesisQueryParams,
@@ -58,6 +60,7 @@ import {
   ModelFTSummaryByAddressResp,
   ModelFTSummaryDataByAddressResp,
   ModelMempoolInfoResp,
+  ModelNFTAuctionResp,
   ModelNFTInfoResp,
   ModelNFTOwnerResp,
   ModelNFTSellResp,
@@ -153,6 +156,31 @@ export const getAddressAddressBalance = (
 
 /** Key is end point string without base url */
 getAddressAddressBalance.key = "/address/{address}/balance";
+
+/**
+ * 通过地址address获取合约相关tx历史列表，返回详细输入/输出
+ */
+export const getAddressAddressContractHistory = (
+  /**
+   * Address
+   */
+  address: string,
+  queryParams: GetAddressAddressContractHistoryQueryParams,
+  configOverride?: AxiosRequestConfig
+): Promise<
+  SwaggerResponse<ModelResponse & { data?: ModelTxOutHistoryResp[] }>
+> => {
+  return Http.getRequest(
+    template(getAddressAddressContractHistory.key, { address }),
+    queryParams,
+    undefined,
+    undefined,
+    overrideConfig(_CONSTANT0, configOverride)
+  );
+};
+
+/** Key is end point string without base url */
+getAddressAddressContractHistory.key = "/address/{address}/contract-history";
 
 /**
  * 通过地址address获取相关tx历史列表，返回详细输入/输出
@@ -797,6 +825,24 @@ getFtUtxoDataCodehashGenesisAddress.key =
   "/ft/utxo-data/{codehash}/{genesis}/{address}";
 
 /**
+ * GetRawMempool, get txid list in mempool
+ */
+export const getGetrawmempool = (
+  configOverride?: AxiosRequestConfig
+): Promise<SwaggerResponse<ModelResponse & { data?: string[] }>> => {
+  return Http.getRequest(
+    getGetrawmempool.key,
+    undefined,
+    undefined,
+    undefined,
+    overrideConfig(_CONSTANT0, configOverride)
+  );
+};
+
+/** Key is end point string without base url */
+getGetrawmempool.key = "/getrawmempool";
+
+/**
  * 通过区块height获取区块概述
  */
 export const getHeightHeightBlock = (
@@ -1030,6 +1076,36 @@ export const getMempoolInfo = (
 
 /** Key is end point string without base url */
 getMempoolInfo.key = "/mempool/info";
+
+/**
+ * 通过拍卖的CodeHash和NFT ID获取具体NFTAuction合约utxo
+ */
+export const getNftAuctionUtxoDetailCodehashNftid = (
+  /**
+   * Auction Code Hash160
+   */
+  codehash: string,
+  /**
+   * NFT ID
+   */
+  nftid: string,
+  queryParams: GetNftAuctionUtxoDetailCodehashNftidQueryParams,
+  configOverride?: AxiosRequestConfig
+): Promise<
+  SwaggerResponse<ModelResponse & { data?: ModelNFTAuctionResp[] }>
+> => {
+  return Http.getRequest(
+    template(getNftAuctionUtxoDetailCodehashNftid.key, { codehash, nftid }),
+    queryParams,
+    undefined,
+    undefined,
+    overrideConfig(_CONSTANT0, configOverride)
+  );
+};
+
+/** Key is end point string without base url */
+getNftAuctionUtxoDetailCodehashNftid.key =
+  "/nft/auction/utxo-detail/{codehash}/{nftid}";
 
 /**
  * 查询所有NFT CodeHash简述

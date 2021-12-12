@@ -25,6 +25,7 @@ import {
   getHeightHeightRawtxTxid,
   getHeightHeightTxTxid,
   getMempoolInfo,
+  getNftAuctionUtxoDetailCodehashNftid,
   getNftDetailCodehashGenesisAddress,
   getNftGenesisInfoCodehashGenesis,
   getNftHistoryCodehashGenesisAddress,
@@ -426,7 +427,7 @@ export class SensibleApi {
     return _res.data.data;
   }
 
-  async getRawTx(txid: string) {
+  async getRawTx(txid: string): Promise<string> {
     let _res = await getRawtxTxid(txid);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
@@ -540,7 +541,7 @@ export class SensibleApi {
     codehash: string,
     genesis: string,
     address: string,
-    queryParams: { cursor: number; size: number }
+    queryParams: { cursor: number; size: number; start: number; end: number }
   ) {
     let _res = await getFtHistoryCodehashGenesisAddress(
       codehash,
@@ -628,7 +629,12 @@ export class SensibleApi {
     codehash: string,
     genesis: string,
     address: string,
-    queryParams: { cursor: number; size: number } = { cursor: 0, size: 20 }
+    queryParams: {
+      cursor: number;
+      size: number;
+      start: number;
+      end: number;
+    } = { cursor: 0, size: 20, start: 0, end: 0 }
   ) {
     let _res = await getNftHistoryCodehashGenesisAddress(
       codehash,
@@ -795,6 +801,20 @@ export class SensibleApi {
       genesis,
       queryParams
     );
+    if (_res.data.code != 0) {
+      throw new Error(_res.data.msg);
+    }
+    return _res.data.data;
+  }
+
+  async getNftAuctionUtxoDetails(
+    codehash: string,
+    nftid: string,
+    ready: boolean = true
+  ) {
+    let _res = await getNftAuctionUtxoDetailCodehashNftid(codehash, nftid, {
+      ready,
+    });
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
