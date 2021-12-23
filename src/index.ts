@@ -43,12 +43,14 @@ import {
   getNftUtxoListCodehashGenesis,
   getRawtxTxid,
   getTxTxid,
+  getTxTxidIns,
   getTxTxidOutIndex,
   getTxTxidOutIndexSpent,
   getTxTxidOuts,
   postPushtx,
   postPushtxs,
 } from "./sensiblequery/services";
+
 async function gzip(data: Buffer): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     zlib.gzip(data, (err, val) => {
@@ -215,7 +217,7 @@ export class SensibleApi {
     let data = _res.data.data;
     return {
       balance: data.balance.toString(),
-      pendingBalance: data.balance.toString(),
+      pendingBalance: data.pendingBalance.toString(),
       utxoCount: data.utxoCount,
       decimal: data.decimal,
     };
@@ -391,7 +393,7 @@ export class SensibleApi {
   //tx
   async getTxsByBlockId(
     blockId: string,
-    queryParams: { cursor: number; size: number }
+    queryParams: { cursor: number; size: number } = { cursor: 0, size: 100 }
   ) {
     let _res = await getBlockTxsBlkid(blockId, queryParams);
     if (_res.data.code != 0) {
@@ -402,7 +404,7 @@ export class SensibleApi {
 
   async getTxsByHeight(
     height: number,
-    queryParams: { cursor: number; size: number }
+    queryParams: { cursor: number; size: number } = { cursor: 0, size: 100 }
   ) {
     let _res = await getHeightHeightBlockTxs(height, queryParams);
     if (_res.data.code != 0) {
@@ -421,6 +423,17 @@ export class SensibleApi {
 
   async getTxInHeight(txid: string, height: number) {
     let _res = await getHeightHeightTxTxid(height, txid);
+    if (_res.data.code != 0) {
+      throw new Error(_res.data.msg);
+    }
+    return _res.data.data;
+  }
+
+  async getTxIns(
+    txid: string,
+    queryParams: { cursor: number; size: number } = { cursor: 0, size: 100 }
+  ) {
+    let _res = await getTxTxidIns(txid, queryParams);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -567,7 +580,7 @@ export class SensibleApi {
   async getFtOwners(
     codehash: string,
     genesis: string,
-    queryParams: { cursor: number; size: number }
+    queryParams: { cursor: number; size: number } = { cursor: 0, size: 100 }
   ) {
     let _res = await getFtOwnersCodehashGenesis(codehash, genesis, queryParams);
     if (_res.data.code != 0) {
@@ -578,7 +591,7 @@ export class SensibleApi {
 
   async getFtSummaryData(
     address: string,
-    queryParams: { cursor: number; size: number }
+    queryParams: { cursor: number; size: number } = { cursor: 0, size: 100 }
   ) {
     let _res = await getFtSummaryDataAddress(address, queryParams);
     if (_res.data.code != 0) {
