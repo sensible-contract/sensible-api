@@ -1,6 +1,6 @@
 {
   "name": "@sensible-contract/sensible-api",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "A JavaScript/TypeScript wrapper for sensiblequery API.",
   "repository": "https://github.com/sensible-contract/sensible-api",
   "main": "lib/index.js",

@@ -12,14 +12,17 @@ import Axios, {
 import qs from "qs";
 const baseConfig: AxiosRequestConfig = {
   baseURL: "", // <--- Add your base url
-  headers: {
+  paramsSerializer: (param) => qs.stringify(param, { indices: false }),
+};
+
+if (typeof globalThis.window == "undefined") {
+  baseConfig.headers = {
     "Content-Encoding": "UTF-8",
     Accept: "application/json",
     "Content-Type": "application/json-patch+json",
     "Accept-Encoding": "gzip, deflate, br",
-  },
-  paramsSerializer: (param) => qs.stringify(param, { indices: false }),
-};
+  };
+}
 
 let axiosInstance: AxiosInstance;
 
