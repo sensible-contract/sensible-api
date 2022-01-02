@@ -66,24 +66,25 @@ function getAxiosInstance(security: Security): AxiosInstance {
         return Promise.reject(error);
       }
     );
-  }
 
-  // ًًRequest interceptor
-  axiosInstance.interceptors.request.use(
-    async (requestConfig) => {
-      // Do something before request is sent
-      /** Example on how to add authorization based on security */
-      if (security?.[0]) {
-        // requestConfig.headers.authorization = "";
+    // ًًRequest interceptor
+    axiosInstance.interceptors.request.use(
+      async (requestConfig) => {
+        console.log(requestConfig);
+        // Do something before request is sent
+        /** Example on how to add authorization based on security */
+        if (security?.[0]) {
+          // requestConfig.headers.authorization = "";
+        }
+
+        return requestConfig;
+      },
+      (error) => {
+        // Do something with request error
+        return Promise.reject(error);
       }
-
-      return requestConfig;
-    },
-    (error) => {
-      // Do something with request error
-      return Promise.reject(error);
-    }
-  );
+    );
+  }
 
   return axiosInstance;
 }
