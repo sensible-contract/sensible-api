@@ -70,7 +70,6 @@ function getAxiosInstance(security: Security): AxiosInstance {
     // ًًRequest interceptor
     axiosInstance.interceptors.request.use(
       async (requestConfig) => {
-        console.log(requestConfig);
         // Do something before request is sent
         /** Example on how to add authorization based on security */
         if (security?.[0]) {
