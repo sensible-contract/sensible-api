@@ -27,7 +27,53 @@ export interface GetAddressAddressContractHistoryQueryParams {
   start: number;
 }
 
+export interface GetAddressAddressContractHistoryTxQueryParams {
+  /**
+   *
+   * 起始游标
+   */
+  cursor: number;
+  /**
+   *
+   * End Block Height, (0 to get mempool data)
+   */
+  end: number;
+  /**
+   *
+   * 返回记录数量
+   */
+  size: number;
+  /**
+   *
+   * Start Block Height
+   */
+  start: number;
+}
+
 export interface GetAddressAddressHistoryQueryParams {
+  /**
+   *
+   * 起始游标
+   */
+  cursor: number;
+  /**
+   *
+   * End Block Height, (0 to get mempool data)
+   */
+  end: number;
+  /**
+   *
+   * 返回记录数量
+   */
+  size: number;
+  /**
+   *
+   * Start Block Height
+   */
+  start: number;
+}
+
+export interface GetAddressAddressHistoryTxQueryParams {
   /**
    *
    * 起始游标
@@ -185,6 +231,29 @@ export interface GetContractSwapDataCodehashGenesisQueryParams {
 }
 
 export interface GetFtHistoryCodehashGenesisAddressQueryParams {
+  /**
+   *
+   * 起始游标
+   */
+  cursor: number;
+  /**
+   *
+   * End Block Height, (0 to get mempool data)
+   */
+  end: number;
+  /**
+   *
+   * 返回记录数量
+   */
+  size: number;
+  /**
+   *
+   * Start Block Height
+   */
+  start: number;
+}
+
+export interface GetFtIncomeHistoryCodehashGenesisAddressQueryParams {
   /**
    *
    * 起始游标

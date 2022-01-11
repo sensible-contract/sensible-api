@@ -9,7 +9,9 @@ import { SwaggerResponse } from "./config";
 import { Http } from "./httpRequest";
 import {
   GetAddressAddressContractHistoryQueryParams,
+  GetAddressAddressContractHistoryTxQueryParams,
   GetAddressAddressHistoryQueryParams,
+  GetAddressAddressHistoryTxQueryParams,
   GetAddressAddressUtxoQueryParams,
   GetAddressAddressUtxoDataQueryParams,
   GetBlockTxsBlkidQueryParams,
@@ -19,6 +21,7 @@ import {
   GetContractSwapAggregateCodehashGenesisQueryParams,
   GetContractSwapDataCodehashGenesisQueryParams,
   GetFtHistoryCodehashGenesisAddressQueryParams,
+  GetFtIncomeHistoryCodehashGenesisAddressQueryParams,
   GetFtOwnersCodehashGenesisQueryParams,
   GetFtSummaryDataAddressQueryParams,
   GetFtSummaryAddressQueryParams,
@@ -183,6 +186,30 @@ export const getAddressAddressContractHistory = (
 getAddressAddressContractHistory.key = "/address/{address}/contract-history";
 
 /**
+ * 通过地址address获取合约相关tx历史列表，返回tx概要
+ */
+export const getAddressAddressContractHistoryTx = (
+  /**
+   * Address
+   */
+  address: string,
+  queryParams: GetAddressAddressContractHistoryTxQueryParams,
+  configOverride?: AxiosRequestConfig
+): Promise<SwaggerResponse<ModelResponse & { data?: ModelTxInfoResp[] }>> => {
+  return Http.getRequest(
+    template(getAddressAddressContractHistoryTx.key, { address }),
+    queryParams,
+    undefined,
+    undefined,
+    overrideConfig(_CONSTANT0, configOverride)
+  );
+};
+
+/** Key is end point string without base url */
+getAddressAddressContractHistoryTx.key =
+  "/address/{address}/contract-history/tx";
+
+/**
  * 通过地址address获取相关tx历史列表，返回详细输入/输出
  */
 export const getAddressAddressHistory = (
@@ -206,6 +233,29 @@ export const getAddressAddressHistory = (
 
 /** Key is end point string without base url */
 getAddressAddressHistory.key = "/address/{address}/history";
+
+/**
+ * 通过地址address获取相关tx历史列表，返回tx概要
+ */
+export const getAddressAddressHistoryTx = (
+  /**
+   * Address
+   */
+  address: string,
+  queryParams: GetAddressAddressHistoryTxQueryParams,
+  configOverride?: AxiosRequestConfig
+): Promise<SwaggerResponse<ModelResponse & { data?: ModelTxInfoResp[] }>> => {
+  return Http.getRequest(
+    template(getAddressAddressHistoryTx.key, { address }),
+    queryParams,
+    undefined,
+    undefined,
+    overrideConfig(_CONSTANT0, configOverride)
+  );
+};
+
+/** Key is end point string without base url */
+getAddressAddressHistoryTx.key = "/address/{address}/history/tx";
 
 /**
  * 通过地址address获取相关常规utxo列表
@@ -623,6 +673,44 @@ export const getFtHistoryCodehashGenesisAddress = (
 /** Key is end point string without base url */
 getFtHistoryCodehashGenesisAddress.key =
   "/ft/history/{codehash}/{genesis}/{address}";
+
+/**
+ * 通过FT合约CodeHash+溯源genesis获取地址相关tx历史列表，返回详细输出历史，并附带输入来源
+ */
+export const getFtIncomeHistoryCodehashGenesisAddress = (
+  /**
+   * Code Hash160
+   */
+  codehash: string,
+  /**
+   * Genesis ID
+   */
+  genesis: string,
+  /**
+   * Address
+   */
+  address: string,
+  queryParams: GetFtIncomeHistoryCodehashGenesisAddressQueryParams,
+  configOverride?: AxiosRequestConfig
+): Promise<
+  SwaggerResponse<ModelResponse & { data?: ModelTxOutHistoryResp[] }>
+> => {
+  return Http.getRequest(
+    template(getFtIncomeHistoryCodehashGenesisAddress.key, {
+      codehash,
+      genesis,
+      address,
+    }),
+    queryParams,
+    undefined,
+    undefined,
+    overrideConfig(_CONSTANT0, configOverride)
+  );
+};
+
+/** Key is end point string without base url */
+getFtIncomeHistoryCodehashGenesisAddress.key =
+  "/ft/income-history/{codehash}/{genesis}/{address}";
 
 /**
  * 查询所有FT Token简述

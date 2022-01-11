@@ -2,6 +2,7 @@ import * as zlib from "zlib";
 import { getAxiosInstance } from "./sensiblequery/config";
 import {
   getAddressAddressBalance,
+  getAddressAddressHistoryTx,
   getAddressAddressUtxo,
   getAddressAddressUtxoData,
   getBlockchainInfo,
@@ -622,6 +623,22 @@ export class SensibleApi {
 
   async getTxOut(txid: string, outIndex: number) {
     let _res = await getTxTxidOutIndex(txid, outIndex);
+    if (_res.data.code != 0) {
+      throw new Error(_res.data.msg);
+    }
+    return _res.data.data;
+  }
+
+  async getAddressTxHistory(
+    address: string,
+    queryParams: {
+      cursor: number;
+      size: number;
+      start: number;
+      end: number;
+    } = { cursor: 0, size: 20, start: 0, end: 0 }
+  ) {
+    let _res = await getAddressAddressHistoryTx(address, queryParams);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
