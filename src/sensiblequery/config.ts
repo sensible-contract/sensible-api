@@ -17,10 +17,15 @@ const baseConfig: AxiosRequestConfig = {
 
 if (typeof globalThis.window == "undefined") {
   baseConfig.headers = {
-    "Content-Encoding": "UTF-8",
-    Accept: "application/json",
+    //request is gzip
+    // "Content-Encoding": "gzip",
+    //request is json
     "Content-Type": "application/json-patch+json",
-    "Accept-Encoding": "gzip, deflate, br",
+
+    //response is gzip
+    // "Accept-Encoding": "gzip, deflate, br",
+    //response is json
+    Accept: "application/json",
   };
 }
 
