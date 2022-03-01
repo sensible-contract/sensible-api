@@ -171,6 +171,34 @@ export interface GetContractHistoryCodehashGenesisAddressQueryParams {
   start: number;
 }
 
+export interface GetContractHistoryCodehashGenesisQueryParams {
+  /**
+   *
+   * 起始游标
+   */
+  cursor: number;
+  /**
+   *
+   * 逆序返回记录
+   */
+  desc: boolean;
+  /**
+   *
+   * End Block Height, (0 to get mempool data)
+   */
+  end: number;
+  /**
+   *
+   * 返回记录数量
+   */
+  size: number;
+  /**
+   *
+   * Start Block Height
+   */
+  start: number;
+}
+
 export interface GetContractSwapAggregateAmountCodehashGenesisQueryParams {
   /**
    *
@@ -1137,6 +1165,11 @@ export interface ModelNFTAuctionResp {
   feeAmount?: number;
   /**
    *
+   * 当前拍卖手续费比例
+   */
+  feeRate?: number;
+  /**
+   *
    * 当前拍卖NFT的genesis
    */
   genesis?: string;
@@ -1660,6 +1693,11 @@ export interface ModelTxInfoResp {
    * Tx所在区块的Id
    */
   blkid?: string;
+  /**
+   *
+   * Tx的确认数
+   */
+  confirmations?: number;
   /**
    *
    * Tx所在区块的高度

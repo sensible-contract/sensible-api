@@ -16,6 +16,7 @@ import {
   GetAddressAddressUtxoDataQueryParams,
   GetBlockTxsBlkidQueryParams,
   GetBlocksQueryParams,
+  GetContractHistoryCodehashGenesisQueryParams,
   GetContractHistoryCodehashGenesisAddressQueryParams,
   GetContractSwapAggregateAmountCodehashGenesisQueryParams,
   GetContractSwapAggregateCodehashGenesisQueryParams,
@@ -394,7 +395,37 @@ export const getBlocks = (
 getBlocks.key = "/blocks";
 
 /**
- * 通过溯源genesis获取相关tx历史列表，返回详细输入/输出
+ * 通过溯源genesis获取任何地址相关tx历史列表，返回详细输入/输出
+ */
+export const getContractHistoryCodehashGenesis = (
+  /**
+   * Code Hash160
+   */
+  codehash: string,
+  /**
+   * Genesis ID
+   */
+  genesis: string,
+  queryParams: GetContractHistoryCodehashGenesisQueryParams,
+  configOverride?: AxiosRequestConfig
+): Promise<
+  SwaggerResponse<ModelResponse & { data?: ModelTxOutHistoryResp[] }>
+> => {
+  return Http.getRequest(
+    template(getContractHistoryCodehashGenesis.key, { codehash, genesis }),
+    queryParams,
+    undefined,
+    undefined,
+    overrideConfig(_CONSTANT0, configOverride)
+  );
+};
+
+/** Key is end point string without base url */
+getContractHistoryCodehashGenesis.key =
+  "/contract/history/{codehash}/{genesis}";
+
+/**
+ * 通过溯源genesis获取某地址相关tx历史列表，返回详细输入/输出
  */
 export const getContractHistoryCodehashGenesisAddress = (
   /**

@@ -2,6 +2,7 @@ import * as zlib from "zlib";
 import { getAxiosInstance } from "./sensiblequery/config";
 import {
   getAddressAddressBalance,
+  getAddressAddressHistory,
   getAddressAddressHistoryTx,
   getAddressAddressUtxo,
   getAddressAddressUtxoData,
@@ -9,6 +10,7 @@ import {
   getBlockIdBlkid,
   getBlocks,
   getBlockTxsBlkid,
+  getContractHistoryCodehashGenesis,
   getContractSwapAggregateAmountCodehashGenesis,
   getContractSwapAggregateCodehashGenesis,
   getContractSwapDataCodehashGenesis,
@@ -629,6 +631,12 @@ export class SensibleApi {
     return _res.data.data;
   }
 
+  /**
+   * 通过地址address获取相关tx历史列表，返回tx概要
+   * @param address
+   * @param queryParams
+   * @returns
+   */
   async getAddressTxHistory(
     address: string,
     queryParams: {
@@ -639,6 +647,28 @@ export class SensibleApi {
     } = { cursor: 0, size: 20, start: 0, end: 0 }
   ) {
     let _res = await getAddressAddressHistoryTx(address, queryParams);
+    if (_res.data.code != 0) {
+      throw new Error(_res.data.msg);
+    }
+    return _res.data.data;
+  }
+
+  /**
+   * 通过地址address获取相关tx历史列表，返回详细输入/输出
+   * @param address
+   * @param queryParams
+   * @returns
+   */
+  async getAddressTxInsOutsHistory(
+    address: string,
+    queryParams: {
+      cursor: number;
+      size: number;
+      start: number;
+      end: number;
+    } = { cursor: 0, size: 20, start: 0, end: 0 }
+  ) {
+    let _res = await getAddressAddressHistory(address, queryParams);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -845,6 +875,28 @@ export class SensibleApi {
     let _res = await getNftAuctionUtxoDetailCodehashNftid(codehash, nftid, {
       ready,
     });
+    if (_res.data.code != 0) {
+      throw new Error(_res.data.msg);
+    }
+    return _res.data.data;
+  }
+
+  async getContractHistory(
+    codehash: string,
+    genesis: string,
+    queryParams: {
+      cursor: number;
+      size: number;
+      start: number;
+      end: number;
+      desc: boolean;
+    }
+  ) {
+    let _res = await getContractHistoryCodehashGenesis(
+      codehash,
+      genesis,
+      queryParams
+    );
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
