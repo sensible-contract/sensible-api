@@ -7,3 +7,4 @@ test
 src
 node_modules
 .gitignore
+tests
