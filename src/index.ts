@@ -1,3 +1,4 @@
+import { Axios } from "axios";
 import * as zlib from "zlib";
 import { getAxiosInstance } from "./sensiblequery/config";
 import {
@@ -122,8 +123,10 @@ export type NftSellUtxo = {
 };
 
 export class SensibleApi {
+  axios: Axios;
   constructor(apiPrefix = "https://api.sensiblequery.com") {
-    getAxiosInstance([]).defaults.baseURL = apiPrefix;
+    this.axios = getAxiosInstance([]);
+    this.axios.defaults.baseURL = apiPrefix;
   }
 
   async getBalance(address: string): Promise<Balance> {

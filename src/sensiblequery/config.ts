@@ -13,6 +13,7 @@ import qs from "qs";
 const baseConfig: AxiosRequestConfig = {
   baseURL: "", // <--- Add your base url
   paramsSerializer: (param) => qs.stringify(param, { indices: false }),
+  timeout: 60 * 1000,
 };
 
 if (typeof globalThis.window == "undefined") {
