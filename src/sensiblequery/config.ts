@@ -31,7 +31,9 @@ if (typeof globalThis.window == "undefined") {
 }
 
 let axiosInstance: AxiosInstance;
-
+const auth = {
+  authorization: "",
+};
 function getAxiosInstance(security: Security): AxiosInstance {
   if (!axiosInstance) {
     axiosInstance = Axios.create(baseConfig);
@@ -78,8 +80,8 @@ function getAxiosInstance(security: Security): AxiosInstance {
       async (requestConfig) => {
         // Do something before request is sent
         /** Example on how to add authorization based on security */
-        if (security?.[0]) {
-          // requestConfig.headers.authorization = "";
+        if (auth.authorization) {
+          requestConfig.headers.authorization = auth.authorization;
         }
 
         return requestConfig;
@@ -93,6 +95,10 @@ function getAxiosInstance(security: Security): AxiosInstance {
 
   return axiosInstance;
 }
+
+export const setAuthorization = (authorization: string) => {
+  auth.authorization = authorization;
+};
 
 class RequestError extends Error {
   constructor(

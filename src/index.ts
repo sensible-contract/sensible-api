@@ -1,5 +1,5 @@
 import { Axios } from "axios";
-import { getAxiosInstance } from "./sensiblequery/config";
+import { getAxiosInstance, setAuthorization } from "./sensiblequery/config";
 import {
   getAddressAddressBalance,
   getAddressAddressHistory,
@@ -113,7 +113,6 @@ export type NftSellUtxo = {
 
 export class SensibleApi {
   axios: Axios;
-  private authorization: string;
   constructor(apiPrefix = "https://api-v2.sensiblequery.com") {
     this.axios = getAxiosInstance([]);
     this.axios.defaults.baseURL = apiPrefix;
@@ -124,19 +123,15 @@ export class SensibleApi {
 
     if (authorization) {
       if (authorization.indexOf("Bearer") != 0) {
-        this.authorization = `Bearer ${authorization}`;
+        setAuthorization(`Bearer ${authorization}`);
       } else {
-        this.authorization = authorization;
+        setAuthorization(authorization);
       }
     }
   }
 
   async getBalance(address: string): Promise<Balance> {
-    const _res = await getAddressAddressBalance(address, {
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getAddressAddressBalance(address);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -152,11 +147,7 @@ export class SensibleApi {
     address: string,
     queryParams: { cursor: number; size: number } = { cursor: 0, size: 100 }
   ): Promise<Utxo[]> {
-    const _res = await getAddressAddressUtxo(address, queryParams, {
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getAddressAddressUtxo(address, queryParams);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -178,11 +169,7 @@ export class SensibleApi {
    * @returns
    */
   async getRawTxData(txid: string): Promise<string> {
-    const _res = await getRawtxTxid(txid, {
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getRawtxTxid(txid);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -190,14 +177,7 @@ export class SensibleApi {
   }
 
   async broadcast(txHex: string): Promise<string> {
-    const _res = await postPushtx(
-      { txHex },
-      {
-        headers: {
-          authorization: this.authorization,
-        },
-      }
-    );
+    const _res = await postPushtx({ txHex });
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -214,12 +194,7 @@ export class SensibleApi {
       codehash,
       genesis,
       address,
-      queryParams,
-      {
-        headers: {
-          authorization: this.authorization,
-        },
-      }
+      queryParams
     );
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
@@ -241,12 +216,7 @@ export class SensibleApi {
     const _res = await getFtBalanceCodehashGenesisAddress(
       codehash,
       genesis,
-      address,
-      {
-        headers: {
-          authorization: this.authorization,
-        },
-      }
+      address
     );
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
@@ -264,11 +234,7 @@ export class SensibleApi {
     address: string,
     queryParams: { cursor: number; size: number } = { cursor: 0, size: 20 }
   ): Promise<{ cursor: number; list: Token[]; total: number }> {
-    const _res = await getFtSummaryDataAddress(address, queryParams, {
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getFtSummaryDataAddress(address, queryParams);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -299,12 +265,7 @@ export class SensibleApi {
       codehash,
       genesis,
       address,
-      queryParams,
-      {
-        headers: {
-          authorization: this.authorization,
-        },
-      }
+      queryParams
     );
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
@@ -328,12 +289,7 @@ export class SensibleApi {
       codehash,
       genesis,
       address,
-      queryParams,
-      {
-        headers: {
-          authorization: this.authorization,
-        },
-      }
+      queryParams
     );
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
@@ -343,11 +299,7 @@ export class SensibleApi {
 
   //default
   async getBlockChainInfo() {
-    const _res = await getBlockchainInfo({
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getBlockchainInfo();
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -355,18 +307,10 @@ export class SensibleApi {
   }
 
   async getMempool() {
-    const _res = await getHeightHeightBlockTxs(
-      4294967295,
-      {
-        cursor: 0,
-        size: 100000,
-      },
-      {
-        headers: {
-          authorization: this.authorization,
-        },
-      }
-    );
+    const _res = await getHeightHeightBlockTxs(4294967295, {
+      cursor: 0,
+      size: 100000,
+    });
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -374,11 +318,7 @@ export class SensibleApi {
   }
 
   async getMempoolInfo() {
-    const _res = await getMempoolInfo({
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getMempoolInfo();
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -386,14 +326,7 @@ export class SensibleApi {
   }
 
   async pushTx(txHex: string): Promise<string> {
-    const _res = await postPushtx(
-      { txHex },
-      {
-        headers: {
-          authorization: this.authorization,
-        },
-      }
-    );
+    const _res = await postPushtx({ txHex });
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -401,14 +334,7 @@ export class SensibleApi {
   }
 
   async pushTxs(txHexs: string[]) {
-    const _res = await postPushtxs(
-      { txsHex: txHexs },
-      {
-        headers: {
-          authorization: this.authorization,
-        },
-      }
-    );
+    const _res = await postPushtxs({ txsHex: txHexs });
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -417,11 +343,7 @@ export class SensibleApi {
 
   //address
   async getAddressBalance(address: string) {
-    const _res = await getAddressAddressBalance(address, {
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getAddressAddressBalance(address);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -432,11 +354,7 @@ export class SensibleApi {
     address: string,
     queryParams: { cursor: number; size: number } = { cursor: 0, size: 100 }
   ) {
-    const _res = await getAddressAddressUtxo(address, queryParams, {
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getAddressAddressUtxo(address, queryParams);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -447,11 +365,7 @@ export class SensibleApi {
     address: string,
     queryParams: { cursor: number; size: number } = { cursor: 0, size: 100 }
   ) {
-    const _res = await getAddressAddressUtxoData(address, queryParams, {
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getAddressAddressUtxoData(address, queryParams);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -460,11 +374,7 @@ export class SensibleApi {
 
   //block
   async getBlockInfo(blockId: string) {
-    const _res = await getBlockIdBlkid(blockId, {
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getBlockIdBlkid(blockId);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -472,11 +382,7 @@ export class SensibleApi {
   }
 
   async getBlocks(queryParams: { start: number; end: number }) {
-    const _res = await getBlocks(queryParams, {
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getBlocks(queryParams);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -484,11 +390,7 @@ export class SensibleApi {
   }
 
   async getBlockInfoByHeight(height: number) {
-    const _res = await getHeightHeightBlock(height, {
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getHeightHeightBlock(height);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -500,11 +402,7 @@ export class SensibleApi {
     blockId: string,
     queryParams: { cursor: number; size: number } = { cursor: 0, size: 100 }
   ) {
-    const _res = await getBlockTxsBlkid(blockId, queryParams, {
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getBlockTxsBlkid(blockId, queryParams);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -515,11 +413,7 @@ export class SensibleApi {
     height: number,
     queryParams: { cursor: number; size: number } = { cursor: 0, size: 100 }
   ) {
-    const _res = await getHeightHeightBlockTxs(height, queryParams, {
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getHeightHeightBlockTxs(height, queryParams);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -527,11 +421,7 @@ export class SensibleApi {
   }
 
   async getRawTxInHeight(txid: string, height: number) {
-    const _res = await getHeightHeightRawtxTxid(height, txid, {
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getHeightHeightRawtxTxid(height, txid);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -539,11 +429,7 @@ export class SensibleApi {
   }
 
   async getTxInHeight(txid: string, height: number) {
-    const _res = await getHeightHeightTxTxid(height, txid, {
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getHeightHeightTxTxid(height, txid);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -554,11 +440,7 @@ export class SensibleApi {
     txid: string,
     queryParams: { cursor: number; size: number } = { cursor: 0, size: 100 }
   ) {
-    const _res = await getTxTxidIns(txid, queryParams, {
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getTxTxidIns(txid, queryParams);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -570,11 +452,7 @@ export class SensibleApi {
     height: number,
     queryParams: { cursor: number; size: number } = { cursor: 0, size: 100 }
   ) {
-    const _res = await getHeightHeightTxTxidIns(height, txid, queryParams, {
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getHeightHeightTxTxidIns(height, txid, queryParams);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -582,11 +460,7 @@ export class SensibleApi {
   }
 
   async getRawTx(txid: string): Promise<string> {
-    const _res = await getRawtxTxid(txid, {
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getRawtxTxid(txid);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -594,11 +468,7 @@ export class SensibleApi {
   }
 
   async getTx(txid: string) {
-    const _res = await getTxTxid(txid, {
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getTxTxid(txid);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -615,12 +485,7 @@ export class SensibleApi {
     const _res = await getContractSwapAggregateAmountCodehashGenesis(
       codehash,
       genesis,
-      queryParams,
-      {
-        headers: {
-          authorization: this.authorization,
-        },
-      }
+      queryParams
     );
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
@@ -637,12 +502,7 @@ export class SensibleApi {
     const _res = await getContractSwapAggregateCodehashGenesis(
       codehash,
       genesis,
-      queryParams,
-      {
-        headers: {
-          authorization: this.authorization,
-        },
-      }
+      queryParams
     );
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
@@ -659,12 +519,7 @@ export class SensibleApi {
     const _res = await getContractSwapDataCodehashGenesis(
       codehash,
       genesis,
-      queryParams,
-      {
-        headers: {
-          authorization: this.authorization,
-        },
-      }
+      queryParams
     );
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
@@ -678,12 +533,7 @@ export class SensibleApi {
     const _res = await getFtBalanceCodehashGenesisAddress(
       codehash,
       genesis,
-      address,
-      {
-        headers: {
-          authorization: this.authorization,
-        },
-      }
+      address
     );
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
@@ -693,11 +543,7 @@ export class SensibleApi {
 
   //查询使用某codehash的FT Token简述
   async getFtCodehashInfo(codehash: string) {
-    const _res = await getFtCodehashInfoCodehash(codehash, {
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getFtCodehashInfoCodehash(codehash);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -706,11 +552,7 @@ export class SensibleApi {
 
   //查询所有FT codehash简述
   async getFtCodehashInfos() {
-    const _res = await getFtCodehashAll({
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getFtCodehashAll();
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -719,11 +561,7 @@ export class SensibleApi {
 
   //查询使用某codehash+genesis的FT Token简述
   async getFtGenesisInfo(codehash: string, genesis: string) {
-    const _res = await getFtGenesisInfoCodehashGenesis(codehash, genesis, {
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getFtGenesisInfoCodehashGenesis(codehash, genesis);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -741,12 +579,7 @@ export class SensibleApi {
       codehash,
       genesis,
       address,
-      queryParams,
-      {
-        headers: {
-          authorization: this.authorization,
-        },
-      }
+      queryParams
     );
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
@@ -756,11 +589,7 @@ export class SensibleApi {
 
   //查询所有FT Token简述
   async getFtInfos() {
-    const _res = await getFtInfoAll({
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getFtInfoAll();
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -775,12 +604,7 @@ export class SensibleApi {
     const _res = await getFtOwnersCodehashGenesis(
       codehash,
       genesis,
-      queryParams,
-      {
-        headers: {
-          authorization: this.authorization,
-        },
-      }
+      queryParams
     );
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
@@ -792,11 +616,7 @@ export class SensibleApi {
     address: string,
     queryParams: { cursor: number; size: number } = { cursor: 0, size: 100 }
   ) {
-    const _res = await getFtSummaryDataAddress(address, queryParams, {
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getFtSummaryDataAddress(address, queryParams);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -804,11 +624,7 @@ export class SensibleApi {
   }
 
   async getTxOutSpent(txid: string, index: number) {
-    const _res = await getTxTxidOutIndexSpent(txid, index, {
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getTxTxidOutIndexSpent(txid, index);
     if (_res.data.code != 0) {
       return null;
       // throw new Error(_res.data.msg);
@@ -820,11 +636,7 @@ export class SensibleApi {
     txid: string,
     queryParams: { cursor: number; size: number } = { cursor: 0, size: 20 }
   ) {
-    const _res = await getTxTxidOuts(txid, queryParams, {
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getTxTxidOuts(txid, queryParams);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -836,11 +648,7 @@ export class SensibleApi {
     height: number,
     queryParams: { cursor: number; size: number } = { cursor: 0, size: 100 }
   ) {
-    const _res = await getHeightHeightTxTxidOuts(height, txid, queryParams, {
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getHeightHeightTxTxidOuts(height, txid, queryParams);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -848,11 +656,7 @@ export class SensibleApi {
   }
 
   async getTxOut(txid: string, outIndex: number) {
-    const _res = await getTxTxidOutIndex(txid, outIndex, {
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getTxTxidOutIndex(txid, outIndex);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -874,11 +678,7 @@ export class SensibleApi {
       end: number;
     } = { cursor: 0, size: 20, start: 0, end: 0 }
   ) {
-    const _res = await getAddressAddressHistoryTx(address, queryParams, {
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getAddressAddressHistoryTx(address, queryParams);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -900,11 +700,7 @@ export class SensibleApi {
       end: number;
     } = { cursor: 0, size: 20, start: 0, end: 0 }
   ) {
-    const _res = await getAddressAddressHistory(address, queryParams, {
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getAddressAddressHistory(address, queryParams);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -913,11 +709,7 @@ export class SensibleApi {
 
   //查询使用某codehash+genesis的NFT Token简述
   async getNftGenesisInfo(codehash: string, genesis: string) {
-    const _res = await getNftGenesisInfoCodehashGenesis(codehash, genesis, {
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getNftGenesisInfoCodehashGenesis(codehash, genesis);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -940,12 +732,7 @@ export class SensibleApi {
       codehash,
       genesis,
       address,
-      queryParams,
-      {
-        headers: {
-          authorization: this.authorization,
-        },
-      }
+      queryParams
     );
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
@@ -955,11 +742,7 @@ export class SensibleApi {
 
   //查询所有NFT Token简述
   async getNftInfoAll() {
-    const _res = await getNftInfoAll({
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getNftInfoAll();
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -974,12 +757,7 @@ export class SensibleApi {
     const _res = await getNftOwnersCodehashGenesis(
       codehash,
       genesis,
-      queryParams,
-      {
-        headers: {
-          authorization: this.authorization,
-        },
-      }
+      queryParams
     );
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
@@ -990,11 +768,7 @@ export class SensibleApi {
   async getNftSellAllUtxos(
     queryParams: { cursor: number; size: number } = { cursor: 0, size: 20 }
   ) {
-    const _res = await getNftSellUtxo(queryParams, {
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getNftSellUtxo(queryParams);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -1005,11 +779,7 @@ export class SensibleApi {
     address: string,
     queryParams: { cursor: number; size: number } = { cursor: 0, size: 20 }
   ) {
-    const _res = await getNftSellUtxoByAddressAddress(address, queryParams, {
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getNftSellUtxoByAddressAddress(address, queryParams);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -1026,12 +796,7 @@ export class SensibleApi {
       codehash,
       genesis,
       tokenIndex as any,
-      queryParams,
-      {
-        headers: {
-          authorization: this.authorization,
-        },
-      }
+      queryParams
     );
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
@@ -1047,12 +812,7 @@ export class SensibleApi {
     const _res = await getNftSellUtxoCodehashGenesis(
       codehash,
       genesis,
-      queryParams,
-      {
-        headers: {
-          authorization: this.authorization,
-        },
-      }
+      queryParams
     );
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
@@ -1064,11 +824,7 @@ export class SensibleApi {
     address: string,
     queryParams: { cursor: number; size: number } = { cursor: 0, size: 20 }
   ) {
-    const _res = await getNftSummaryAddress(address, queryParams, {
-      headers: {
-        authorization: this.authorization,
-      },
-    });
+    const _res = await getNftSummaryAddress(address, queryParams);
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -1085,12 +841,7 @@ export class SensibleApi {
       codehash,
       genesis,
       tokenIndex,
-      queryParams,
-      {
-        headers: {
-          authorization: this.authorization,
-        },
-      }
+      queryParams
     );
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
@@ -1108,12 +859,7 @@ export class SensibleApi {
       codehash,
       genesis,
       address,
-      queryParams,
-      {
-        headers: {
-          authorization: this.authorization,
-        },
-      }
+      queryParams
     );
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
@@ -1129,12 +875,7 @@ export class SensibleApi {
     const _res = await getNftUtxoDetailCodehashGenesisToken_index(
       codehash,
       genesis,
-      tokenIndex as any,
-      {
-        headers: {
-          authorization: this.authorization,
-        },
-      }
+      tokenIndex as any
     );
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
@@ -1150,12 +891,7 @@ export class SensibleApi {
     const _res = await getNftUtxoListCodehashGenesis(
       codehash,
       genesis,
-      queryParams,
-      {
-        headers: {
-          authorization: this.authorization,
-        },
-      }
+      queryParams
     );
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
@@ -1168,18 +904,9 @@ export class SensibleApi {
     nftid: string,
     ready: boolean = true
   ) {
-    const _res = await getNftAuctionUtxoDetailCodehashNftid(
-      codehash,
-      nftid,
-      {
-        ready,
-      },
-      {
-        headers: {
-          authorization: this.authorization,
-        },
-      }
-    );
+    const _res = await getNftAuctionUtxoDetailCodehashNftid(codehash, nftid, {
+      ready,
+    });
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
     }
@@ -1200,12 +927,7 @@ export class SensibleApi {
     const _res = await getContractHistoryCodehashGenesis(
       codehash,
       genesis,
-      queryParams,
-      {
-        headers: {
-          authorization: this.authorization,
-        },
-      }
+      queryParams
     );
     if (_res.data.code != 0) {
       throw new Error(_res.data.msg);
